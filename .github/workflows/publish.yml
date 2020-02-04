@@ -6,20 +6,17 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-      NPM_TOKEN: '${{ secrets.NPM_TOKEN }}'
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 12
+    - uses: actions/checkout@v2
+    - name: Install and Publish
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
+        # registry-url: 'https://registry.npmjs.org'
+        registry-url: 'https://npm.pkg.github.com'
     - name: npm deploy
-      run: |
-        npm install
-        echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>~/.npmrc
-        npm publish
+    - run: npm install
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
