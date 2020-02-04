@@ -15,19 +15,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    - run: ./build/github_release.sh
+      run: ./build/github_release.sh
     - name: Bump version
-    - run: npm version patch --no-git-tag-version | xargs -I {} git commit -am "Bumping up -> {}" && git push
-    - name: 'deployment success'
-      if: success()
-      uses: 'deliverybot/status@master'
-      with:
-        state: 'success'
-        token: '${{ secrets.GITHUB_TOKEN }}'
-
-    - name: 'deployment failure'
-      if: failure()
-      uses: 'deliverybot/status@master'
-      with:
-        state: 'failure'
-        token: '${{ secrets.GITHUB_TOKEN }}'
+      run: npm version patch --no-git-tag-version | xargs -I {} git commit -am "Bumping up -> {}" && git push
