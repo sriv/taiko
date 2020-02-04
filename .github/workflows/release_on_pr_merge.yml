@@ -11,10 +11,11 @@ jobs:
       CI: true
     steps:
     - uses: actions/checkout@v2
-    - name: Make Github release
+    - name: NodeJS 12.x
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
+    - name: Make Github release
       run: ./build/github_release.sh
     - name: Bump version
       run: npm version patch --no-git-tag-version | xargs -I {} git commit -am "Bumping up -> {}" && git push
