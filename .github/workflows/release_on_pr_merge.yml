@@ -1,0 +1,33 @@
+name: Release on PR Merge
+on: 
+  pull_request:
+    types: closed
+jobs:
+  release-and-bump-version:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      CI: true
+    steps:
+    - uses: actions/checkout@v2
+    - name: Make Github release
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: ./build/github_release.sh
+    - name: Bump version
+    - run: npm version patch --no-git-tag-version | xargs -I {} git commit -am "Bumping up -> {}" && git push
+    - name: 'deployment success'
+      if: success()
+      uses: 'deliverybot/status@master'
+      with:
+        state: 'success'
+        token: '${{ secrets.GITHUB_TOKEN }}'
+
+    - name: 'deployment failure'
+      if: failure()
+      uses: 'deliverybot/status@master'
+      with:
+        state: 'failure'
+        token: '${{ secrets.GITHUB_TOKEN }}'
