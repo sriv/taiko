@@ -4,7 +4,7 @@ on:
     types: closed
 jobs:
   release-and-bump-version:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && !contains(github.event.pull_request.labels.*.name, 'Not For Release')
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
